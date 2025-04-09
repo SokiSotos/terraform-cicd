@@ -27,13 +27,6 @@ jobs:
       - name: Instalar Terraform
         uses: hashicorp/setup-terraform@v2
 
-      - name: Esperar a que LocalStack esté disponible
-        run: |
-          echo "Esperando LocalStack..."
-          until curl -s http://localhost:4566/health | grep '"s3": "running"'; do
-            sleep 2
-          done
-
       - name: Inicializar Terraform
         run: terraform init
 
