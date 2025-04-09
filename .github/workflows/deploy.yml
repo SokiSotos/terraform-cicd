@@ -2,6 +2,17 @@ name: Deploy con Terraform y LocalStack
 
 on: [push]
 
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - 4566:4566
+    options: >-
+      --health-cmd "curl -f http://localhost:4566/health || exit 1"
+      --health-interval 10s
+      --health-timeout 5s
+      --health-retries 5
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
