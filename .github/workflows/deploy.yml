@@ -1,5 +1,4 @@
-name: Despliegue con Terraform y LocalStack
-
+name: Deploy Terraform
 on: [push]
 
 jobs:
