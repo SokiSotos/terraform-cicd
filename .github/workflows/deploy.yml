@@ -1,4 +1,4 @@
-name: Deploy con Terraform y LocalStack
+name: Despliegue con Terraform y LocalStack
 
 on: [push]
 
@@ -6,29 +6,36 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-services:
-  localstack:
-    image: localstack/localstack
-    ports:
-      - 4566:4566
-    options: >-
-      --health-cmd "curl -f http://localhost:4566/health || exit 1"
-      --health-interval 10s
-      --health-timeout 5s
-      --health-retries 5
+    services:
+      localstack:
+        image: localstack/localstack
+        ports:
+          - 4566:4566
+        options: >-
+          --health-cmd "curl -f http://localhost:4566/health || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-    - name: Checkout del repositorio
-      uses: actions/checkout@v3
+      - name: Checkout del repositorio
+        uses: actions/checkout@v3
 
-    - name: Instalar Terraform
-      uses: hashicorp/setup-terraform@v2
+      - name: Instalar Terraform
+        uses: hashicorp/setup-terraform@v2
 
-    - name: Inicializar Terraform
-      run: terraform init
+      - name: Esperar a que LocalStack esté disponible
+        run: |
+          echo "Esperando LocalStack..."
+          until curl -s http://localhost:4566/health | grep '"s3": "running"'; do
+            sleep 2
+          done
 
-    - name: Planificar
-      run: terraform plan
+      - name: Inicializar Terraform
+        run: terraform init
 
-    - name: Aplicar configuración
-      run: terraform apply -auto-approve
+      - name: Planificar infraestructura
+        run: terraform plan
+
+      - name: Aplicar infraestructura
+        run: terraform apply -auto-approve
