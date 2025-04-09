@@ -2,6 +2,10 @@ name: Deploy con Terraform y LocalStack
 
 on: [push]
 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
 services:
   localstack:
     image: localstack/localstack
@@ -12,10 +16,6 @@ services:
       --health-interval 10s
       --health-timeout 5s
       --health-retries 5
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout del repositorio
