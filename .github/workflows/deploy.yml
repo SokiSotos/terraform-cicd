@@ -8,9 +8,12 @@ jobs:
 
     services:
       localstack:
-        image: localstack/localstack
+        image: localstack/localstack:1.4
         ports:
           - 4566:4566
+        env:
+          SERVICES: s3
+          DEBUG: 1
         options: >-
           --health-cmd "curl -f http://localhost:4566/health || exit 1"
           --health-interval 10s
