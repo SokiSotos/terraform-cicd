@@ -1,28 +1,23 @@
-name: CI/CD Terraform con LocalStack
+name: Deploy con Terraform y LocalStack
 
-on:
-  push:
-    branches: [main]
+on: [push]
 
 jobs:
-  terraform:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clonar repositorio
-        uses: actions/checkout@v3
+    - name: Checkout del repositorio
+      uses: actions/checkout@v3
 
-      - name: Instalar Terraform
-        uses: hashicorp/setup-terraform@v2
+    - name: Instalar Terraform
+      uses: hashicorp/setup-terraform@v2
 
-      - name: Validar configuración
-        run: terraform validate
+    - name: Inicializar Terraform
+      run: terraform init
 
-      - name: Inicializar Terraform
-        run: terraform init
+    - name: Planificar
+      run: terraform plan
 
-      - name: Planificar infraestructura
-        run: terraform plan
-
-      - name: Aplicar infraestructura
-        run: terraform apply -auto-approve
+    - name: Aplicar configuración
+      run: terraform apply -auto-approve
